@@ -1,4 +1,4 @@
-import {Missile} from './missile.js'
+import { Missile } from './missile.js'
 
 export class Spaceship {
     missiles = [];
@@ -26,7 +26,7 @@ export class Spaceship {
 
     #getPosition() {
         return this.element.offsetLeft +
-        this.element.offsetWidth / 2;
+            this.element.offsetWidth / 2;
     }
 
     #eventListeners() {
@@ -55,21 +55,21 @@ export class Spaceship {
         })
     }
 
-    #gameLoop = () =>{
+    #gameLoop = () => {
         this.#whatKey();
         requestAnimationFrame(this.#gameLoop);
     }
 
-    #whatKey(){
-        if(this.#leftArrow && this.#getPosition() > 12){
+    #whatKey() {
+        if (this.#leftArrow && this.#getPosition() > 12) {
             this.element.style.left = `${parseInt(this.element.style.left, 10) - this.#modifier}px`;
         }
-        if(this.#rightArrow && this.#getPosition() + 12 < window.innerWidth){
+        if (this.#rightArrow && this.#getPosition() + 12 < window.innerWidth) {
             this.element.style.left = `${parseInt(this.element.style.left, 10) + this.#modifier}px`;
         }
     }
 
-    #shot(){
+    #shot() {
         const missile = new Missile(
             this.#getPosition(),
             this.element.offsetTop,
