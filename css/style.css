@@ -21,8 +21,18 @@ body{
 .container{
   width:100vw;
   height:100vh;
-  background-color: #000;
+  background-image: url('/Spaceship_art_pack/Background/bg_sprite.png');
+  animation: move-bg-Y 8000ms linear infinite;
   position: relative;
+}
+
+@keyframes move-bg-Y {
+    0%{
+      background-position-y: 0px;
+    }
+    100%{
+      background-position-y:1536px;
+    }  
 }
 
 .information{
@@ -121,6 +131,7 @@ body{
   background-size: cover;
   width:12px;
   height: 24px;
+  position:absolute;
 }
 
 @keyframes move-8-units-X {

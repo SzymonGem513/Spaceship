@@ -1,19 +1,42 @@
-import {Spaceship} from './spaceship.js'
+import { Spaceship } from './spaceship.js'
 
-class Game{
+class Game {
   #htmlElements = {
     spaceship: document.querySelector('[data-spaceship]'),
+    container: document.querySelector('[data-container]'),
   };
 
-  #ship = new Spaceship(this.#htmlElements.spaceship);
+  #ship = new Spaceship(
+    this.#htmlElements.spaceship,
+    this.#htmlElements.container
+    );
 
-
-  init(){
+  init() {
     this.#ship.init();
+    this.#newGame();
+  }
+
+  #newGame(){
+    setInterval(() => this.#checkPosition(), 1);
+  }
+
+  #checkPosition() {
+    this.#ship.missiles.forEach((missile, missileIndex, missileArray) => {
+      const missilePosition = {
+        top: missile.element.offsetTop,
+        right: missile.element.offsetLeft + missile.element.offsetWidth,
+        bottom: missile.element.offsetTop + missile.element.offsetHeight,
+        left: missile.element.offsetLeft
+      };
+
+      if (missilePosition.bottom < 0) {
+        missile.remove();
+      }
+    })
   }
 }
 
-window.onload = function(){
+window.onload = function () {
   const game = new Game();
   game.init();
 }
