@@ -2,7 +2,7 @@ import {Missile} from './missile.js'
 
 export class Spaceship {
     missiles = [];
-    #modifier = 5;
+    #modifier = 10;
     #leftArrow = false;
     #rightArrow = false;
 
@@ -61,16 +61,19 @@ export class Spaceship {
     }
 
     #whatKey(){
-        if(this.#leftArrow && this.#getPosition() > 0){
+        if(this.#leftArrow && this.#getPosition() > 12){
             this.element.style.left = `${parseInt(this.element.style.left, 10) - this.#modifier}px`;
         }
-        if(this.#rightArrow && this.#getPosition() < window.innerWidth){
+        if(this.#rightArrow && this.#getPosition() + 12 < window.innerWidth){
             this.element.style.left = `${parseInt(this.element.style.left, 10) + this.#modifier}px`;
         }
     }
 
     #shot(){
-        const missile = new Missile(this.#getPosition(), this.element.offsetTop, this.container);
+        const missile = new Missile(
+            this.#getPosition(),
+            this.element.offsetTop,
+            this.container);
 
         missile.init();
         this.missiles.push(missile);
