@@ -5,6 +5,8 @@ export class Spaceship {
     #modifier = 10;
     #leftArrow = false;
     #rightArrow = false;
+    #upArrow = false;
+    #downArrow = false;
 
     constructor(element, container) {
         this.element = element;
@@ -38,6 +40,12 @@ export class Spaceship {
                 case 39:
                     this.#rightArrow = true;
                     break;
+                case 38:
+                    this.#upArrow = true;
+                    break;
+                case 40:
+                    this.#downArrow = true;
+                    break;
             }
         })
         window.addEventListener('keyup', ({ keyCode }) => {
@@ -50,6 +58,12 @@ export class Spaceship {
                     break;
                 case 39:
                     this.#rightArrow = false;
+                    break;
+                case 38:
+                    this.#upArrow = false;
+                    break;
+                case 40:
+                    this.#downArrow = false;
                     break;
             }
         })
@@ -66,6 +80,15 @@ export class Spaceship {
         }
         if (this.#rightArrow && this.#getPosition() + 12 < window.innerWidth) {
             this.element.style.left = `${parseInt(this.element.style.left, 10) + this.#modifier}px`;
+        }
+
+        if (this.#upArrow && this.#getPosition() + 12 < window.innerHeight) {
+            console.log('up');
+            this.element.style.bottom = `${parseInt(this.element.style.bottom, 10) + this.#modifier}px`;
+        }
+        if (this.#downArrow && this.#getPosition() + 12 < window.innerHeight) {
+            console.log('down');
+            this.element.style.bottom = `${parseInt(this.element.style.bottom, 10) - this.#modifier}px`;
         }
     }
 
