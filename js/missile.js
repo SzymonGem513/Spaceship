@@ -14,7 +14,7 @@ export class Missile {
         this.element.style.top = `${(this.y - this.element.offsetTop) + 70}px`;
 
         this.interval = setInterval(() => (
-            this.element.style.top = `${this.element.offsetTop - 1}px`)
+            this.element.style.top = `${this.element.offsetTop - 4}px`)
     ,10);
 
     }
