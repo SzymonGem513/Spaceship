@@ -22,18 +22,26 @@ export class Spaceship {
     #setPosition() {
         this.element.style.bottom = '50px';
         this.element.style.left = `${window.innerWidth / 2 -
-            this.#getPosition()
+            this.#getPositionHorizontal()
             }px`;
     }
 
-    #getPosition() {
+    #getPositionHorizontal() {
         return this.element.offsetLeft +
             this.element.offsetWidth / 2;
+    }
+
+    #getPositionVertical() {
+        return this.element.offsetTop +
+            this.element.offsetHeight / 2;
     }
 
     #eventListeners() {
         window.addEventListener('keydown', ({ keyCode }) => {
             switch (keyCode) {
+                case 32:
+                    setTimeout(() =>  this.#shot(), 300);                  
+                    break;
                 case 37:
                     this.#leftArrow = true;
                     break;
@@ -50,9 +58,9 @@ export class Spaceship {
         })
         window.addEventListener('keyup', ({ keyCode }) => {
             switch (keyCode) {
-                case 32:
-                    this.#shot();
-                    break;
+                // case 32:
+                //     this.#shot();
+                //     break;
                 case 37:
                     this.#leftArrow = false;
                     break;
@@ -75,26 +83,26 @@ export class Spaceship {
     }
 
     #whatKey() {
-        if (this.#leftArrow && this.#getPosition() > 12) {
+        if (this.#leftArrow && this.#getPositionHorizontal() > 12) {
             this.element.style.left = `${parseInt(this.element.style.left, 10) - this.#modifier}px`;
         }
-        if (this.#rightArrow && this.#getPosition() + 12 < window.innerWidth) {
+        if (this.#rightArrow && this.#getPositionHorizontal() + 12 < window.innerWidth) {
             this.element.style.left = `${parseInt(this.element.style.left, 10) + this.#modifier}px`;
         }
 
-        if (this.#upArrow && this.#getPosition() + 12 < window.innerHeight) {
-            console.log('up');
+        if (this.#upArrow && this.#getPositionVertical() > 32) {
+            console.log('up',this.#getPositionVertical());
             this.element.style.bottom = `${parseInt(this.element.style.bottom, 10) + this.#modifier}px`;
         }
-        if (this.#downArrow && this.#getPosition() + 12 < window.innerHeight) {
-            console.log('down');
+        if (this.#downArrow && this.#getPositionVertical() + 12 < window.innerHeight) {
+            console.log('down',this.#getPositionVertical());
             this.element.style.bottom = `${parseInt(this.element.style.bottom, 10) - this.#modifier}px`;
         }
     }
 
     #shot() {
         const missile = new Missile(
-            this.#getPosition(),
+            this.#getPositionHorizontal(),
             this.element.offsetTop,
             this.container);
 
