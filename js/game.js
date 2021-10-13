@@ -31,7 +31,7 @@ class Game {
     this.#lives = 3;
     this.#score = 0;
     this.#enemiesInterval = 30;
-    this.#createEnemyInterval = setInterval(() => this.#randomNewEnemy(), 1500);
+    this.#createEnemyInterval = setInterval(() => this.#randomNewEnemy(), 5500);
     this.#checkPositionInterval = setInterval(() => this.#checkPosition(), 1);
   }
 
