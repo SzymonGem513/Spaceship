@@ -1,5 +1,6 @@
 import { Spaceship } from './spaceship.js';
 import { Enemy } from './Enemy.js';
+import { Heal } from './heal.js';
 class Game {
   #htmlElements = {
     spaceship: document.querySelector('[data-spaceship]'),
@@ -21,6 +22,7 @@ class Game {
   #enemiesInterval = null;
   #checkPositionInterval = null;
   #createEnemyInterval = null;
+  #createHealInterval = null;
 
   init() {
     this.#ship.init();
@@ -31,8 +33,19 @@ class Game {
     this.#lives = 3;
     this.#score = 0;
     this.#enemiesInterval = 30;
-    this.#createEnemyInterval = setInterval(() => this.#randomNewEnemy(), 5500);
+    this.#createEnemyInterval = setInterval(() => this.#randomNewEnemy(), 5000);
+    this.#createHealInterval = setInterval(() => this.#healingObject(), 100 + this.#getRandomHealTime());
     this.#checkPositionInterval = setInterval(() => this.#checkPosition(), 1);
+  }
+
+  #getRandomHealTime = () =>{
+    return Math.floor(Math.random() * (300 - 500)) + 500;
+  }
+
+  #healingObject = () =>{
+    const heal = new Heal(this.#htmlElements.container, this.#enemiesInterval, this.#enemiesInterval, 'enemy');
+
+    heal.init();
   }
 
   #randomNewEnemy() {

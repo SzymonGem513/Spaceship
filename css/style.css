@@ -143,6 +143,16 @@ body{
   position:absolute;
 }
 
+.healing-object{
+  width: calc(var(--size-unit) / 2);
+  height: calc(var(--size-unit) / 2);
+  background-color: transparent;
+  background-image: url('../images/heal.png');
+  animation: move-2-units-X var(--ships-animation-time) steps(2) infinite;
+  z-index: 2;
+  position:fixed;
+}
+
 
 .live--down{
 animation: live-down-opwacity .3s linear forwards;
@@ -166,6 +176,15 @@ animation: live-down-opwacity .3s linear forwards;
   50%{
     opacity:0.7;
   }
+}
+
+@keyframes move-2-units-X {
+  0%{
+    background-position-x: 0px;
+  }
+  100%{
+    background-position-x: calc(var(--size-unit) * -2);
+  }  
 }
 
 @keyframes move-8-units-X {

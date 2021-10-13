@@ -17,7 +17,7 @@ export class Enemy {
     #setEnemy() {
         this.element.classList.add(this.enemyClass);
         this.container.appendChild(this.element);
-        this.element.style.top = '0px';
+        this.element.style.top = '-64px';
         this.element.style.left = `${this.#randomPosition()}px`;
     }
 
@@ -46,6 +46,7 @@ export class Enemy {
         clearInterval(this.interval);
         const aniamtionTime = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--explosions-animation-time'), 10)
         setTimeout(() => this.element.remove(), aniamtionTime)
+        console.log(this.element);
 
     }
 
