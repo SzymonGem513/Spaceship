@@ -60,8 +60,7 @@ export class Spaceship {
         window.addEventListener('keyup', (e) => {
             switch (e.keyCode) {
                 case 32:
-                    this.#spacebar = false;
-                    this.#shot();     
+                    this.#spacebar = false;   
                     break;
                 case 37:
                     this.#leftArrow = false;
@@ -122,6 +121,7 @@ export class Spaceship {
     }
 
     #burstShooting = () =>{
+        this.#shot();
         this.#burstShootingInterval = setInterval(() => this.#shot(), 200);
         return false;
     }
