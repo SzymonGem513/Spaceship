@@ -7,7 +7,8 @@ class Game {
     container: document.querySelector('[data-container]'),
     score: document.querySelector('[data-score]'),
     lives: document.querySelector('[data-lives]'),
-    overlay: document.querySelector('[data-overlay]')
+    overlayRed: document.querySelector('[data-overlay-red]'),
+    overlayGreen: document.querySelector('[data-overlay-green]'),
   };
 
   #ship = new Spaceship(
@@ -19,6 +20,7 @@ class Game {
   #score = 0;
 
   #enemies = [];
+  #healsObj = [];
   #enemiesInterval = null;
   #checkPositionInterval = null;
   #createEnemyInterval = null;
@@ -34,18 +36,19 @@ class Game {
     this.#score = 0;
     this.#enemiesInterval = 30;
     this.#createEnemyInterval = setInterval(() => this.#randomNewEnemy(), 5000);
-    this.#createHealInterval = setInterval(() => this.#healingObject(), 100 + this.#getRandomHealTime());
+    this.#createHealInterval = setInterval(() => this.#healingObject(), 10000 + this.#getRandomHealTime());
     this.#checkPositionInterval = setInterval(() => this.#checkPosition(), 1);
-  }
+  }  
 
   #getRandomHealTime = () =>{
-    return Math.floor(Math.random() * (300 - 500)) + 500;
+    return Math.floor(Math.random() * (30000 - 50000)) + 50000;
   }
 
   #healingObject = () =>{
-    const heal = new Heal(this.#htmlElements.container, this.#enemiesInterval, this.#enemiesInterval, 'enemy');
+    const heal = new Heal(this.#htmlElements.container, this.#enemiesInterval, 'healing');
 
     heal.init();
+    this.#healsObj.push(heal);
   }
 
   #randomNewEnemy() {
@@ -74,7 +77,7 @@ class Game {
       if (enemyPosition.top > window.innerHeight) {
         enemy.explode();
         enemiesArray.splice(enemyIndex, 1);
-        this.#updateLives();
+        this.#livesDown();
       }
       this.#ship.missiles.forEach((missile, missileIndex, missileArray) => {
         const missilePosition = {
@@ -115,12 +118,23 @@ class Game {
     this.#updateScoreText();
   }
 
-  #updateLives(){
+  #livesDown(){
     this.#lives--;
     this.#updateLivesText();
-    this.#htmlElements.overlay.classList.add('live--down');
-    setTimeout(()=> this.#htmlElements.overlay.classList.remove('live--down'),300);
-     
+    this.#livesUpdate(this.#htmlElements.overlayRed);
+  
+  }
+
+  #livesUp(){
+    this.#lives++;
+    this.#updateLivesText();
+    this.#livesUpdate(this.#htmlElements.overlayGreen);
+  }
+
+  #livesUpdate = (type) =>{
+      type.classList.add('live--change');
+      setTimeout(()=> type.classList.remove('live--change'), 300); 
+  
   }
 
   #updateScoreText(){

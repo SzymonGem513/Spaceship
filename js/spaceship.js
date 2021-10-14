@@ -2,7 +2,7 @@ import { Missile } from './missile.js'
 
 export class Spaceship {
     missiles = [];
-    #modifier = 10;
+    #modifier = 5;
     #leftArrow = false;
     #rightArrow = false;
     #upArrow = false;

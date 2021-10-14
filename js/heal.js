@@ -5,6 +5,8 @@ export class Heal{
         this.interval = null;
         this.intervalTime = intervalTime;
         this.healValue = healValue;
+        this.healAnim = 'heal';
+        this.healClass = 'healing-object';
 
     }
 
@@ -14,28 +16,42 @@ export class Heal{
     }
 
     #setHeal = () => {
-        this.element.classList.add('healing-object');
+        this.element.classList.add(this.healClass);
         this.container.appendChild(this.element);
         this.element.style.top = '-64px';
         this.element.style.left = `${this.#randomPosition()}px`;
     }
 
-    #randomPosition() {
+    #randomPosition = () => {
         return Math.floor(Math.random() * window.innerWidth - this.element.offsetWidth);
     }
 
-    #updatePosition() {
+    #updatePosition = () => {
         this.interval = setInterval(() => this.#setNewPosition(), this.intervalTime);
     }
 
-    #setNewPosition() {
+    #setNewPosition = () => {
         this.element.style.top = `${this.element.offsetTop + 1}px`;
     }
 
-    
+    get = () => {
+       
+    }
+
+    vanish = () => {
+        this.element.classList.remove(this.healClass);
+        this.element.classList.add(this.healAnim);
+        clearInterval(this.interval);
+        const aniamtionTime = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--explosions-animation-time'), 10)
+        setTimeout(() => this.element.remove(), aniamtionTime)
+        console.log(this.element);
+    }
 
 
-
+    remove() {
+        clearInterval(this.interval);
+        this.element.remove();
+    }
 
 
 
