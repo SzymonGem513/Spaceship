@@ -1,6 +1,7 @@
 :root {
   --primary-color: #09fcfd;
   --secondary-color: #510303;
+  --heal-color: #4eff6b;
   --size-unit: 64px;
   --ships-animation-time: 200ms;
   --explosions-animation-time: 600ms;
@@ -94,6 +95,7 @@ body{
   background-image: url('../images/ship.png');
   animation: move-8-units-X var(--ships-animation-time) steps(8) infinite;
   z-index: 2;
+  transform:  rotateY(0deg);
   position:fixed;
 }
 
@@ -126,6 +128,15 @@ body{
   position: fixed;
 }
 
+.healing{
+  width: var(--size-unit);
+  height: var(--size-unit);
+  background-color: transparent;
+  background-image: url('../images/heal.png');
+  animation: move-17-units-X var(--explosions-animation-time) steps(17) forwards;
+  position: fixed;
+}
+
 .explosion--big{
   width: calc(var(--size-unit) * 2);
   height: calc(var(--size-unit) * 2);
@@ -141,14 +152,38 @@ body{
   width:12px;
   height: 24px;
   position:absolute;
+  z-index: 2;
+}
+
+.healing-object{
+  width: calc(var(--size-unit) / 2);
+  height: calc(var(--size-unit) / 2);
+  background-color: transparent;
+  background-image: url('../images/heal.png');
+  animation: move-2-units-X var(--ships-animation-time) steps(2) infinite;
+  z-index: 2;
+  position:fixed;
+}
+
+.explosion--ship{
+  width: var(--size-unit);
+  height: var(--size-unit);
+  background-color: transparent;
+  background-image: url('../images/explosion-ship.png');
+  animation: move-8-units-X var(--ships-animation-time) steps(8) infinite;
+  z-index: 2;
+  position: fixed;
 }
 
 
-.live--down{
-animation: live-down-opwacity .3s linear forwards;
-}
 
-.red-ovelay{
+
+.live--change{
+  animation: live-down-opwacity .3s linear forwards;
+  }
+
+.red-overlay,
+.green-overlay{
   position: fixed;
   left:0;
   top:0;
@@ -159,6 +194,10 @@ animation: live-down-opwacity .3s linear forwards;
   z-index: 0;
 }
 
+.green-overlay{
+  background-color: var(--heal-color);
+}
+
 @keyframes live-down-opwacity {
   0%,100%{
     opacity:0;
@@ -166,6 +205,15 @@ animation: live-down-opwacity .3s linear forwards;
   50%{
     opacity:0.7;
   }
+}
+
+@keyframes move-2-units-X {
+  0%{
+    background-position-x: 0px;
+  }
+  100%{
+    background-position-x: calc(var(--size-unit) * -2);
+  }  
 }
 
 @keyframes move-8-units-X {

@@ -1,12 +1,14 @@
 import { Spaceship } from './spaceship.js';
 import { Enemy } from './Enemy.js';
+import { Heal } from './heal.js';
 class Game {
   #htmlElements = {
     spaceship: document.querySelector('[data-spaceship]'),
     container: document.querySelector('[data-container]'),
     score: document.querySelector('[data-score]'),
     lives: document.querySelector('[data-lives]'),
-    overlay: document.querySelector('[data-overlay]')
+    overlayRed: document.querySelector('[data-overlay-red]'),
+    overlayGreen: document.querySelector('[data-overlay-green]'),
   };
 
   #ship = new Spaceship(
@@ -18,9 +20,11 @@ class Game {
   #score = 0;
 
   #enemies = [];
+  #healsObj = [];
   #enemiesInterval = null;
   #checkPositionInterval = null;
   #createEnemyInterval = null;
+  #createHealInterval = null;
 
   init() {
     this.#ship.init();
@@ -31,8 +35,20 @@ class Game {
     this.#lives = 3;
     this.#score = 0;
     this.#enemiesInterval = 30;
-    this.#createEnemyInterval = setInterval(() => this.#randomNewEnemy(), 5500);
-    this.#checkPositionInterval = setInterval(() => this.#checkPosition(), 1);
+    this.#createEnemyInterval = setInterval(() => this.#randomNewEnemy(), 5000);
+    this.#createHealInterval = setInterval(() => this.#healingObject(), 10000 + this.#getRandomHealTime());
+    this.#checkPositionInterval = setInterval(() => this.#checkPosition(this.#htmlElements.spaceship), 1);
+  }  
+
+  #getRandomHealTime = () =>{
+    return Math.floor(Math.random() * (10000 - 50000)) + 50000;
+  }
+
+  #healingObject = () =>{
+    const heal = new Heal(this.#htmlElements.container, this.#enemiesInterval, 'healing');
+
+    heal.init();
+    this.#healsObj.push(heal);
   }
 
   #randomNewEnemy() {
@@ -49,7 +65,16 @@ class Game {
     this.#enemies.push(enemy);
   }
 
-  #checkPosition() {
+  #checkPosition(playerShip) {
+    
+    const playerPosition = {
+      top: playerShip.offsetTop,
+      right: playerShip.offsetLeft + playerShip.offsetWidth,
+      bottom: playerShip.offsetTop + playerShip.offsetHeight,
+      left: playerShip.offsetLeft
+    };
+
+
     this.#enemies.forEach((enemy, enemyIndex, enemiesArray) => {
 
       const enemyPosition = {
@@ -61,7 +86,7 @@ class Game {
       if (enemyPosition.top > window.innerHeight) {
         enemy.explode();
         enemiesArray.splice(enemyIndex, 1);
-        this.#updateLives();
+        this.#livesDown();
       }
       this.#ship.missiles.forEach((missile, missileIndex, missileArray) => {
         const missilePosition = {
@@ -92,6 +117,27 @@ class Game {
 
       })
     })
+
+
+    this.#healsObj.forEach((heal, healIndex, healsArray) => {
+      const healPosition = {
+        top: heal.element.offsetTop,
+        right: heal.element.offsetLeft + heal.element.offsetWidth,
+        bottom: heal.element.offsetTop + heal.element.offsetHeight,
+        left: heal.element.offsetLeft
+      };
+
+      if (healPosition.bottom >= playerPosition.top +20 &&
+        healPosition.top <= playerPosition.bottom +20 &&
+        healPosition.right >= playerPosition.left +20 &&
+        healPosition.left <= playerPosition.right +20) {
+        heal.vanish();
+        healsArray.splice(healIndex, 1);
+        this.#livesUp();
+      }
+     
+     
+    })
   }
 
   #updateScore(){
@@ -102,12 +148,23 @@ class Game {
     this.#updateScoreText();
   }
 
-  #updateLives(){
+  #livesDown(){
     this.#lives--;
     this.#updateLivesText();
-    this.#htmlElements.overlay.classList.add('live--down');
-    setTimeout(()=> this.#htmlElements.overlay.classList.remove('live--down'),300);
-     
+    this.#livesUpdate(this.#htmlElements.overlayRed);
+  
+  }
+
+  #livesUp(){
+    this.#lives++;
+    this.#updateLivesText();
+    this.#livesUpdate(this.#htmlElements.overlayGreen);
+  }
+
+  #livesUpdate = (type) =>{
+      type.classList.add('live--change');
+      setTimeout(()=> type.classList.remove('live--change'), 300); 
+  
   }
 
   #updateScoreText(){
