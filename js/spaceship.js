@@ -110,7 +110,6 @@ export class Spaceship {
     }
 
     #shot = () => {
-        console.log('SHOT FIRED!');
         const missile = new Missile(
             this.#getPositionHorizontal(),
             this.element.offsetTop,

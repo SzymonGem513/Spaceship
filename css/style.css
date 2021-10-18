@@ -152,6 +152,7 @@ body{
   width:12px;
   height: 24px;
   position:absolute;
+  z-index: 2;
 }
 
 .healing-object{
@@ -163,6 +164,17 @@ body{
   z-index: 2;
   position:fixed;
 }
+
+.explosion--ship{
+  width: var(--size-unit);
+  height: var(--size-unit);
+  background-color: transparent;
+  background-image: url('../images/explosion-ship.png');
+  animation: move-8-units-X var(--ships-animation-time) steps(8) infinite;
+  z-index: 2;
+  position: fixed;
+}
+
 
 
 

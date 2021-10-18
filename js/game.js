@@ -37,11 +37,11 @@ class Game {
     this.#enemiesInterval = 30;
     this.#createEnemyInterval = setInterval(() => this.#randomNewEnemy(), 5000);
     this.#createHealInterval = setInterval(() => this.#healingObject(), 10000 + this.#getRandomHealTime());
-    this.#checkPositionInterval = setInterval(() => this.#checkPosition(), 1);
+    this.#checkPositionInterval = setInterval(() => this.#checkPosition(this.#htmlElements.spaceship), 1);
   }  
 
   #getRandomHealTime = () =>{
-    return Math.floor(Math.random() * (30000 - 50000)) + 50000;
+    return Math.floor(Math.random() * (10000 - 50000)) + 50000;
   }
 
   #healingObject = () =>{
@@ -65,7 +65,16 @@ class Game {
     this.#enemies.push(enemy);
   }
 
-  #checkPosition() {
+  #checkPosition(playerShip) {
+    
+    const playerPosition = {
+      top: playerShip.offsetTop,
+      right: playerShip.offsetLeft + playerShip.offsetWidth,
+      bottom: playerShip.offsetTop + playerShip.offsetHeight,
+      left: playerShip.offsetLeft
+    };
+
+
     this.#enemies.forEach((enemy, enemyIndex, enemiesArray) => {
 
       const enemyPosition = {
@@ -107,6 +116,27 @@ class Game {
         }
 
       })
+    })
+
+
+    this.#healsObj.forEach((heal, healIndex, healsArray) => {
+      const healPosition = {
+        top: heal.element.offsetTop,
+        right: heal.element.offsetLeft + heal.element.offsetWidth,
+        bottom: heal.element.offsetTop + heal.element.offsetHeight,
+        left: heal.element.offsetLeft
+      };
+
+      if (healPosition.bottom >= playerPosition.top +20 &&
+        healPosition.top <= playerPosition.bottom +20 &&
+        healPosition.right >= playerPosition.left +20 &&
+        healPosition.left <= playerPosition.right +20) {
+        heal.vanish();
+        healsArray.splice(healIndex, 1);
+        this.#livesUp();
+      }
+     
+     
     })
   }
 

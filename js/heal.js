@@ -44,7 +44,6 @@ export class Heal{
         clearInterval(this.interval);
         const aniamtionTime = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--explosions-animation-time'), 10)
         setTimeout(() => this.element.remove(), aniamtionTime)
-        console.log(this.element);
     }
 
 
