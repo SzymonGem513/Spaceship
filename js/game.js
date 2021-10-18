@@ -5,6 +5,7 @@ class Game {
   #htmlElements = {
     spaceship: document.querySelector('[data-spaceship]'),
     container: document.querySelector('[data-container]'),
+    spaceshipExplosion: document.querySelector('[data-explosion]'),
     score: document.querySelector('[data-score]'),
     lives: document.querySelector('[data-lives]'),
     overlayRed: document.querySelector('[data-overlay-red]'),
@@ -83,11 +84,25 @@ class Game {
         bottom: enemy.element.offsetTop + enemy.element.offsetHeight,
         left: enemy.element.offsetLeft
       };
+
       if (enemyPosition.top > window.innerHeight) {
         enemy.explode();
         enemiesArray.splice(enemyIndex, 1);
         this.#livesDown();
       }
+
+      if (playerPosition.bottom +20 >= enemyPosition.top &&
+        playerPosition.top +20 <= enemyPosition.bottom &&
+        playerPosition.right +20 >= enemyPosition.left &&
+        playerPosition.left +20 <= enemyPosition.right){
+          enemy.explode();
+          enemiesArray.splice(enemyIndex, 1);
+          this.#livesDown();
+        }
+
+
+
+
       this.#ship.missiles.forEach((missile, missileIndex, missileArray) => {
         const missilePosition = {
           top: missile.element.offsetTop,
@@ -152,6 +167,13 @@ class Game {
     this.#lives--;
     this.#updateLivesText();
     this.#livesUpdate(this.#htmlElements.overlayRed);
+    this.#htmlElements.spaceshipExplosion.classList.add('small-explosion-ship');
+    this.#htmlElements.spaceship.classList.add('shake');
+    setTimeout(() =>{
+      this.#htmlElements.spaceshipExplosion.classList.remove('small-explosion-ship');
+      this.#htmlElements.spaceship.classList.remove('shake');
+    },600)
+
   
   }
 

@@ -34,10 +34,6 @@ export class Heal{
         this.element.style.top = `${this.element.offsetTop + 1}px`;
     }
 
-    get = () => {
-       
-    }
-
     vanish = () => {
         this.element.classList.remove(this.healClass);
         this.element.classList.add(this.healAnim);
