@@ -36,7 +36,7 @@ class Game {
     this.#lives = 3;
     this.#score = 0;
     this.#enemiesInterval = 30;
-    this.#createEnemyInterval = setInterval(() => this.#randomNewEnemy(), 5000);
+    this.#createEnemyInterval = setInterval(() => this.#randomNewEnemy(), 1000);
     this.#createHealInterval = setInterval(() => this.#healingObject(), 10000 + this.#getRandomHealTime());
     this.#checkPositionInterval = setInterval(() => this.#checkPosition(this.#htmlElements.spaceship), 1);
   }  
@@ -93,8 +93,8 @@ class Game {
 
       if (playerPosition.bottom +20 >= enemyPosition.top &&
         playerPosition.top +20 <= enemyPosition.bottom &&
-        playerPosition.right +20 >= enemyPosition.left &&
-        playerPosition.left +20 <= enemyPosition.right){
+        playerPosition.right -30 >= enemyPosition.left &&
+        playerPosition.left +30 <= enemyPosition.right){
           enemy.explode();
           enemiesArray.splice(enemyIndex, 1);
           this.#livesDown();
