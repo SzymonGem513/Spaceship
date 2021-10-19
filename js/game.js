@@ -91,17 +91,15 @@ class Game {
         this.#livesDown();
       }
 
-      if (playerPosition.bottom +20 >= enemyPosition.top &&
+      if (playerPosition.bottom -20 >= enemyPosition.top &&
         playerPosition.top +20 <= enemyPosition.bottom &&
-        playerPosition.right -30 >= enemyPosition.left &&
-        playerPosition.left +30 <= enemyPosition.right){
+        playerPosition.right -20 >= enemyPosition.left &&
+        playerPosition.left +20 <= enemyPosition.right){
+          console.log(playerPosition);
           enemy.explode();
           enemiesArray.splice(enemyIndex, 1);
           this.#livesDown();
         }
-
-
-
 
       this.#ship.missiles.forEach((missile, missileIndex, missileArray) => {
         const missilePosition = {
