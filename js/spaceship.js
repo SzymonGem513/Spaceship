@@ -17,12 +17,12 @@ export class Spaceship {
     }
 
     init() {
-        this.#setPosition()
+        this.setPosition()
         this.#eventListeners();
         this.#gameLoop();
     }
 
-    #setPosition = () => {
+    setPosition = () => {
         this.element.style.bottom = '50px';
         this.element.style.left = `${window.innerWidth / 2 - this.#getPositionHorizontal()}px`;
     }
@@ -57,6 +57,7 @@ export class Spaceship {
                     break;
             }
         })
+        
         window.addEventListener('keyup', (e) => {
             switch (e.keyCode) {
                 case 32:

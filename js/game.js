@@ -10,6 +10,9 @@ class Game {
     lives: document.querySelector('[data-lives]'),
     overlayRed: document.querySelector('[data-overlay-red]'),
     overlayGreen: document.querySelector('[data-overlay-green]'),
+    modal: document.querySelector('[data-modal]'),
+    scoreInfo: document.querySelector('[data-score-info]'),
+    button: document.querySelector('[data-button]'),
   };
 
   #ship = new Spaceship(
@@ -28,24 +31,56 @@ class Game {
   #createHealInterval = null;
 
   init() {
-    this.#ship.init();
     this.#newGame();
+    this.#htmlElements.button.addEventListener('click', () => {
+      this.#newGame();
+      console.log('click');
+    })
   }
 
   #newGame() {
+    this.#htmlElements.modal.classList.add('hide');
+    console.log('new game');
+    this.#ship.init();
     this.#lives = 3;
     this.#score = 0;
     this.#enemiesInterval = 30;
+    this.#updateScoreText();
+    this.#updateLivesText();
+    this.#ship.element.style.left = '0px';
+    this.#ship.setPosition();
     this.#createEnemyInterval = setInterval(() => this.#randomNewEnemy(), 1000);
     this.#createHealInterval = setInterval(() => this.#healingObject(), 10000 + this.#getRandomHealTime());
     this.#checkPositionInterval = setInterval(() => this.#checkPosition(this.#htmlElements.spaceship), 1);
-  }  
+  }
 
-  #getRandomHealTime = () =>{
+  #endGame() {
+    this.#htmlElements.scoreInfo.textContent = `You loose! Your score is: ${this.#score}`;
+    this.#enemies.forEach(enemy => {
+      enemy.explode();
+    })
+    this.#enemies.length = 0;
+
+    this.#healsObj.forEach(heal => {
+      heal.vanish();
+    })
+    this.#healsObj.length = 0;
+
+    clearInterval(this.#createEnemyInterval);
+    clearInterval(this.#checkPositionInterval);
+    clearInterval(this.#createHealInterval);
+    this.#htmlElements.spaceshipExplosion.classList.add('explosion--ship');
+    setTimeout(() =>{
+      this.#htmlElements.spaceshipExplosion.classList.remove('explosion--ship');
+      this.#htmlElements.modal.classList.remove('hide');
+    },600)
+  }
+
+  #getRandomHealTime = () => {
     return Math.floor(Math.random() * (10000 - 50000)) + 50000;
   }
 
-  #healingObject = () =>{
+  #healingObject = () => {
     const heal = new Heal(this.#htmlElements.container, this.#enemiesInterval, 'healing');
 
     heal.init();
@@ -67,7 +102,7 @@ class Game {
   }
 
   #checkPosition(playerShip) {
-    
+
     const playerPosition = {
       top: playerShip.offsetTop,
       right: playerShip.offsetLeft + playerShip.offsetWidth,
@@ -91,15 +126,14 @@ class Game {
         this.#livesDown();
       }
 
-      if (playerPosition.bottom -20 >= enemyPosition.top &&
-        playerPosition.top +20 <= enemyPosition.bottom &&
-        playerPosition.right -20 >= enemyPosition.left &&
-        playerPosition.left +20 <= enemyPosition.right){
-          console.log(playerPosition);
-          enemy.explode();
-          enemiesArray.splice(enemyIndex, 1);
-          this.#livesDown();
-        }
+      if (playerPosition.bottom - 20 >= enemyPosition.top &&
+        playerPosition.top + 20 <= enemyPosition.bottom &&
+        playerPosition.right - 20 >= enemyPosition.left &&
+        playerPosition.left + 20 <= enemyPosition.right) {
+        enemy.explode();
+        enemiesArray.splice(enemyIndex, 1);
+        this.#livesDown();
+      }
 
       this.#ship.missiles.forEach((missile, missileIndex, missileArray) => {
         const missilePosition = {
@@ -140,58 +174,61 @@ class Game {
         left: heal.element.offsetLeft
       };
 
-      if (healPosition.bottom >= playerPosition.top +20 &&
-        healPosition.top <= playerPosition.bottom +20 &&
-        healPosition.right >= playerPosition.left +20 &&
-        healPosition.left <= playerPosition.right +20) {
+      if (healPosition.bottom >= playerPosition.top + 20 &&
+        healPosition.top <= playerPosition.bottom + 20 &&
+        healPosition.right >= playerPosition.left + 20 &&
+        healPosition.left <= playerPosition.right + 20) {
         heal.vanish();
         healsArray.splice(healIndex, 1);
         this.#livesUp();
       }
-     
-     
+
+
     })
   }
 
-  #updateScore(){
+  #updateScore() {
     this.#score++;
-    if(!(this.#score % 5)){
+    if (!(this.#score % 5)) {
       this.#enemiesInterval--;
     }
     this.#updateScoreText();
   }
 
-  #livesDown(){
+  #livesDown() {
     this.#lives--;
     this.#updateLivesText();
     this.#livesUpdate(this.#htmlElements.overlayRed);
     this.#htmlElements.spaceshipExplosion.classList.add('small-explosion-ship');
     this.#htmlElements.spaceship.classList.add('shake');
-    setTimeout(() =>{
+    setTimeout(() => {
       this.#htmlElements.spaceshipExplosion.classList.remove('small-explosion-ship');
       this.#htmlElements.spaceship.classList.remove('shake');
-    },600)
+    }, 600)
 
-  
+    if (!this.#lives) {
+      this.#endGame();
+    }
+
   }
 
-  #livesUp(){
+  #livesUp() {
     this.#lives++;
     this.#updateLivesText();
     this.#livesUpdate(this.#htmlElements.overlayGreen);
   }
 
-  #livesUpdate = (type) =>{
-      type.classList.add('live--change');
-      setTimeout(()=> type.classList.remove('live--change'), 300); 
-  
+  #livesUpdate = (type) => {
+    type.classList.add('live--change');
+    setTimeout(() => type.classList.remove('live--change'), 300);
+
   }
 
-  #updateScoreText(){
+  #updateScoreText() {
     this.#htmlElements.score.textContent = `Score: ${this.#score}`
   }
 
-  #updateLivesText(){
+  #updateLivesText() {
     this.#htmlElements.lives.textContent = `Lives: ${this.#lives}`
   }
 
